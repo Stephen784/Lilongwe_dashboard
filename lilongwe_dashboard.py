@@ -4,8 +4,8 @@ import os, datetime
 from jupyter_dash import JupyterDash
 from dash import dcc, html, dash_table, Input, Output, State
 
-WORKBOOK_PATH = r"C:/Users/user/OneDrive/Desktop/CENTRAL REGION 1ST FULLY PAID DATA (1).xlsx"
-SHEET_NAME = r"LILONGWE"
+WORKBOOK_PATH = "CENTRAL REGION 1ST FULLY PAID DATA (1).xlsx"
+SHEET_NAME = "LILONGWE"
 COLLECTED_FILE = r"C:/Users/user/OneDrive/Desktop/district_dashboards\\collected_lilongwe.csv"
 DISPLAY_FIELDS = ['Farmer Name', 'Contact', 'District', 'Delivery Mode', 'Delivery Centre', 'Order No', 'Products Code', 'Products Quantity', 'Order Total Price']
 
