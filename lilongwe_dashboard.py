@@ -204,5 +204,8 @@ def mark_collected(n_clicks, query):
 def load_log(_):
     return load_collected().to_dict("records")
 
+
 if __name__ == "__main__":
-    app.run_server(mode="inline", debug=True)
+    import os
+    port = int(os.environ.get("PORT", 8050))
+    app.run_server(host="0.0.0.0", port=port, debug=False)
