@@ -1,13 +1,16 @@
-
 import pandas as pd
 import os, datetime
 from jupyter_dash import JupyterDash
 from dash import dcc, html, dash_table, Input, Output, State
 
-WORKBOOK_PATH = "CENTRAL REGION 1ST FULLY PAID DATA (1).xlsx"
+# === Fixed paths for cloud deployment ===
+BASE_DIR = os.path.dirname(__file__)
+WORKBOOK_PATH = os.path.join(BASE_DIR, "CENTRAL REGION 1ST FULLY PAID DATA (1).xlsx")
+COLLECTED_FILE = os.path.join(BASE_DIR, "collected_lilongwe.csv")
+
 SHEET_NAME = "LILONGWE"
-COLLECTED_FILE = r"C:/Users/user/OneDrive/Desktop/district_dashboards\\collected_lilongwe.csv"
-DISPLAY_FIELDS = ['Farmer Name', 'Contact', 'District', 'Delivery Mode', 'Delivery Centre', 'Order No', 'Products Code', 'Products Quantity', 'Order Total Price']
+DISPLAY_FIELDS = ['Farmer Name', 'Contact', 'District', 'Delivery Mode', 'Delivery Centre',
+                  'Order No', 'Products Code', 'Products Quantity', 'Order Total Price']
 
 # === Load sheet once to speed up searches ===
 def load_and_prepare():
@@ -31,7 +34,7 @@ def load_and_prepare():
 
 MASTER_DF = load_and_prepare()  # cache for fast lookups
 
-# === Fixed load_collected() to auto-create CSV if missing ===
+# === Load or create collected CSV ===
 def load_collected():
     if not os.path.exists(COLLECTED_FILE):
         pd.DataFrame(columns=["Order No","Contact","MarkedBy","Timestamp"]).to_csv(COLLECTED_FILE, index=False)
@@ -48,7 +51,6 @@ def save_collected(df):
 app = JupyterDash(__name__)
 app.title = f"LOOKUP - {SHEET_NAME}"
 
-# === Responsive index_string ===
 app.index_string = '''
 <!DOCTYPE html>
 <html>
@@ -149,7 +151,7 @@ app.layout = html.Div(style={"backgroundColor": "#0B132B", "color": "#F0F0F0",
 def do_search(n, query):
     if not query:
         return [], ""
-    df = MASTER_DF  # use preloaded data
+    df = MASTER_DF
     q = str(query).strip()
     mask = df["Order No"].astype(str).str.contains(q, case=False, na=False) | df["Contact"].astype(str).str.contains(q, case=False, na=False)
     results = df[mask].copy()
